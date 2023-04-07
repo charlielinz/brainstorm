@@ -58,15 +58,15 @@ const Home = () => {
   };
   return (
     <div className="flex flex-col max-w-2xl w-full mx-auto">
-      <nav className="flex justify-between my-6">
-        <div className="flex space-x-4">
+      <nav className="flex flex-col justify-between my-6 lg:flex-row">
+        <div className="flex space-x-4 justify-center">
           <FontAwesomeIcon icon={faAt} className="w-16 h-16" />
           <div className="text-2xl">
-            <p>Come BrainStorm</p>
-            <p>Email reborn</p>
+            <p>Come BrainStorm,</p>
+            <p>Email reborn.</p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex justify-center items-center space-x-2 mt-6 lg:mt-0">
           <span>Support me on</span>
           <a
             className="flex items-center space-x-1 hover:text-zinc-600 duration-200"
