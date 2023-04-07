@@ -15,11 +15,27 @@ const generate = async (req, res) => {
     return;
   }
 
-  const question = req.body.text || "";
-  if (question.trim().length === 0) {
+  const { name, relationship, description } = req.body;
+  if (name.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please say something",
+        message: "Please enter name",
+      },
+    });
+    return;
+  }
+  if (relationship.trim().length === 0) {
+    res.status(400).json({
+      error: {
+        message: "Please enter relationship",
+      },
+    });
+    return;
+  }
+  if (description.trim().length === 0) {
+    res.status(400).json({
+      error: {
+        message: "Please enter description",
       },
     });
     return;
@@ -31,11 +47,13 @@ const generate = async (req, res) => {
       messages: [
         {
           role: "user",
-          content: question,
+          content: `I want to write a email to ${name}, and he is my ${relationship}. Here is the thing I want to tell him: ${description} Can you give me a smooth version? `,
         },
       ],
     });
-    res.status(200).json({ result: completion.data.choices[0].message.content });
+    res
+      .status(200)
+      .json({ result: completion.data.choices[0].message.content });
   } catch (error) {
     if (error.response) {
       console.error(error.response.status, error.response.data);

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Button, Checkbox, Form, Input } from 'antd';
 
 const Home = () => {
-  const [textInput, setTextInput] = useState("");
+  const [nameInput, setNameInput] = useState("");
+  const [relationshipInput, setRelationshipInput] = useState("");
+  const [descriptionInput, setDescriptionInput] = useState("");
   const [results, setResults] = useState([]);
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -13,7 +14,11 @@ const Home = () => {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ text: textInput }),
+        body: JSON.stringify({
+          name: nameInput,
+          relationship: relationshipInput,
+          description: descriptionInput,
+        }),
       });
 
       const data = await response.json();
@@ -27,7 +32,9 @@ const Home = () => {
 
       setResults(parser(data.result));
       console.log(results);
-      setTextInput("");
+      setNameInput("");
+      setRelationshipInput("");
+      setDescriptionInput("");
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -35,16 +42,49 @@ const Home = () => {
   };
   return (
     <div className="flex flex-col">
-      <form className="flex flex-col" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="question"
-          placeholder="Ask me"
-          value={textInput}
-          onChange={(e) => setTextInput(e.target.value)}
-        />
-        <input type="submit" value="Generate" />
-      </form>
+      <div className="max-w-2xl w-full mx-auto bg-gradient-to-br from-green-200 to-green-700 rounded">
+        <form
+          className="flex flex-col items-center bg-zinc-800 m-1 pt-2 rounded-lg"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex flex-col w-full px-4">
+            <input
+              className="bg-zinc-700 px-3 py-1 outline-0 rounded-t"
+              type="text"
+              name="name"
+              placeholder="his/her name"
+              value={nameInput}
+              autoComplete="off"
+              onChange={(e) => setNameInput(e.target.value)}
+            />
+            <input
+              className="bg-zinc-700 px-3 py-1 outline-0"
+              type="text"
+              name="relationship"
+              placeholder="he/she is my"
+              value={relationshipInput}
+              autoComplete="off"
+              onChange={(e) => setRelationshipInput(e.target.value)}
+            />
+            <textarea
+              className="bg-zinc-700 px-3 py-1 outline-0 h-24 rounded-b"
+              style={{ resize: "none" }}
+              type="textarea"
+              name="description"
+              placeholder="I wanna tell him/her"
+              value={descriptionInput}
+              autoComplete="off"
+              onChange={(e) => setDescriptionInput(e.target.value)}
+            />
+          </div>
+          <button
+            className="border-[0.5px] outline-0 w-48 my-2 p-1 rounded"
+            type="submit"
+          >
+            Generate Email
+          </button>
+        </form>
+      </div>
       <div>{results}</div>
     </div>
   );
