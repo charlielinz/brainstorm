@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAt } from "@fortawesome/free-solid-svg-icons";
@@ -7,54 +7,92 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 library.add(faAt, faGithub);
 
 const Home = () => {
-  const [nameInput, setNameInput] = useState("");
-  const [recipientInput, setRecipientInput] = useState("");
-  const [relationshipInput, setRelationshipInput] = useState("");
-  const [descriptionInput, setDescriptionInput] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    recipient: "",
+    relationship: "",
+    description: "",
+    nameError: "",
+    recipientError: "",
+    relationshipError: "",
+    descriptionError: "",
+    formValid: false,
+  });
+  useEffect(() => {
+    const { name, recipient, relationship, description } = formData;
+    const formValid = name && recipient && relationship && description;
+    setFormData({ ...formData, formValid });
+  }, [
+    formData.name,
+    formData.recipient,
+    formData.relationship,
+    formData.description,
+  ]);
   const [results, setResults] = useState([]);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    let errorMessage = "";
+    switch (name) {
+      case "name":
+        errorMessage = value ? "" : "please enter your name";
+        break;
+      case "recipient":
+        errorMessage = value ? "" : "please enter whom you want to send to";
+        break;
+      case "relationship":
+        errorMessage = value ? "" : "please enter the relationship between you";
+        break;
+      case "description":
+        errorMessage = value ? "" : "please enter about the email content";
+        break;
+      default:
+        break;
+    }
+
+    setFormData({
+      ...formData,
+      [name]: value,
+      [`${name}Error`]: errorMessage,
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setResults("");
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        name: nameInput,
-        recipient: recipientInput,
-        relationship: relationshipInput,
-        description: descriptionInput,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const data = response.body;
-    if (!data) {
-      return;
-    }
-    const reader = data.getReader();
-    const decoder = new TextDecoder();
-
-    let done = false;
-    let count = 0;
-    while (!done) {
-      const { value, done: doneReading } = await reader.read();
-      done = doneReading;
-      const chunkValue = decoder.decode(value);
-      if (chunkValue === "\n") {
-        setResults((prev) => [...prev, <br key={count} />]);
-      } else {
-        setResults((prev) => [...prev, chunkValue]);
+    if (!formData.formValid) {
+      alert();
+    } else {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          recipient: formData.recipient,
+          relationship: formData.relationship,
+          description: formData.description,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
-      count += 1;
+      const data = response.body;
+      if (!data) {
+        return;
+      }
+
+      decode(data, setResults);
+
+      setFormData({
+        ...formData,
+        name: "",
+        recipient: "",
+        relationship: "",
+        description: "",
+      });
     }
-    setNameInput("");
-    setRecipientInput("");
-    setRelationshipInput("");
-    setDescriptionInput("");
   };
   return (
     <div className="flex flex-col max-w-2xl w-full mx-auto">
@@ -90,42 +128,63 @@ const Home = () => {
               type="text"
               name="name"
               placeholder="my name is"
-              value={nameInput}
+              value={formData.name}
               autoComplete="off"
-              onChange={(e) => setNameInput(e.target.value)}
+              onChange={handleChange}
             />
+            {formData.nameError && (
+              <span className="text-red-400 text-sm pl-3 ">
+                {formData.nameError}
+              </span>
+            )}
             <input
               className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
-              name="recipientInput"
+              name="recipient"
               placeholder="this email is for"
-              value={recipientInput}
+              value={formData.recipient}
               autoComplete="off"
-              onChange={(e) => setRecipientInput(e.target.value)}
+              onChange={handleChange}
             />
+            {formData.recipientError && (
+              <span className="text-red-400 text-sm pl-3 ">
+                {formData.recipientError}
+              </span>
+            )}
             <input
               className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="relationship"
               placeholder="he/she is my"
-              value={relationshipInput}
+              value={formData.relationship}
               autoComplete="off"
-              onChange={(e) => setRelationshipInput(e.target.value)}
+              onChange={handleChange}
             />
+            {formData.relationshipError && (
+              <span className="text-red-400 text-sm pl-3 ">
+                {formData.relationshipError}
+              </span>
+            )}
             <textarea
               className="bg-gray-200 px-3 py-1 outline-0 h-24 rounded-b hover:bg-gray-300 duration-300"
               style={{ resize: "none" }}
               type="textarea"
               name="description"
               placeholder="I want to say"
-              value={descriptionInput}
+              value={formData.description}
               autoComplete="off"
-              onChange={(e) => setDescriptionInput(e.target.value)}
+              onChange={handleChange}
             />
+            {formData.descriptionError && (
+              <span className="text-red-400 text-sm pl-3 ">
+                {formData.descriptionError}
+              </span>
+            )}
           </div>
           <button
             className="border-[0.5px] outline-0 w-48 mt-6 mb-3 p-1 rounded bg-zinc-800 text-gray-200 hover:bg-zinc-700 hover:text-white duration-300"
-            type="submit" 
+            type="submit"
+            disabled={!formData.formValid}
           >
             Generate Email
           </button>
@@ -134,6 +193,24 @@ const Home = () => {
       <div className="mt-12 mx-2">{results}</div>
     </div>
   );
+};
+
+const decode = async (data, setResults) => {
+  const reader = data.getReader();
+  const decoder = new TextDecoder();
+  let done = false;
+  let count = 0;
+  while (!done) {
+    const { value, done: doneReading } = await reader.read();
+    done = doneReading;
+    const chunkValue = decoder.decode(value);
+    if (chunkValue === "\n") {
+      setResults((prev) => [...prev, <br key={count} />]);
+    } else {
+      setResults((prev) => [...prev, chunkValue]);
+    }
+    count += 1;
+  }
 };
 
 export default Home;
