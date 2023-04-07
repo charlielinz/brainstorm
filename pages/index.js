@@ -1,4 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAt } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+
+library.add(faAt, faGithub);
 
 const Home = () => {
   const [nameInput, setNameInput] = useState("");
@@ -46,20 +52,41 @@ const Home = () => {
       count += 1;
     }
     setNameInput("");
-    setRecipientInput("")
+    setRecipientInput("");
     setRelationshipInput("");
     setDescriptionInput("");
   };
   return (
-    <div className="flex flex-col">
-      <div className="max-w-2xl w-full mx-auto bg-gradient-to-br from-gray-300 to-gray-700 rounded">
+    <div className="flex flex-col max-w-2xl w-full mx-auto">
+      <nav className="flex justify-between my-6">
+        <div className="flex space-x-4">
+          <FontAwesomeIcon icon={faAt} className="w-16 h-16" />
+          <div className="text-2xl">
+            <p>Come BrainStorm</p>
+            <p>Email reborn</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span>Support me on</span>
+          <a
+            className="flex items-center space-x-1 hover:text-zinc-600 duration-200"
+            href="https://github.com/charlielinz/brainstorm"
+            target="_blank"
+          >
+            <FontAwesomeIcon icon={faGithub} className="w-6 h-6" />
+            <span className="align-middle ">Github</span>
+          </a>
+        </div>
+      </nav>
+      <div className="bg-gradient-to-br from-gray-300 to-gray-700 rounded transition-colors">
         <form
-          className="flex flex-col items-center bg-gray-100 m-1 pt-2 rounded-lg"
+          className="flex flex-col items-center bg-gray-100 m-2 pt-4 rounded-lg"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-col w-full px-4">
+          <p className="text-2xl py-4">Email Info</p>
+          <div className="flex flex-col w-full px-4 ">
             <input
-              className="bg-gray-200 px-3 py-1 outline-0 rounded-t"
+              className="bg-gray-200 px-3 py-1 outline-0 rounded-t border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="name"
               placeholder="my name is"
@@ -68,16 +95,16 @@ const Home = () => {
               onChange={(e) => setNameInput(e.target.value)}
             />
             <input
-              className="bg-gray-200 px-3 py-1 outline-0"
+              className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="recipientInput"
-              placeholder="write this to"
+              placeholder="this email is for"
               value={recipientInput}
               autoComplete="off"
               onChange={(e) => setRecipientInput(e.target.value)}
             />
             <input
-              className="bg-gray-200 px-3 py-1 outline-0"
+              className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="relationship"
               placeholder="he/she is my"
@@ -86,25 +113,25 @@ const Home = () => {
               onChange={(e) => setRelationshipInput(e.target.value)}
             />
             <textarea
-              className="bg-gray-200 px-3 py-1 outline-0 h-24 rounded-b"
+              className="bg-gray-200 px-3 py-1 outline-0 h-24 rounded-b hover:bg-gray-300 duration-300"
               style={{ resize: "none" }}
               type="textarea"
               name="description"
-              placeholder="describe the thing"
+              placeholder="I want to say"
               value={descriptionInput}
               autoComplete="off"
               onChange={(e) => setDescriptionInput(e.target.value)}
             />
           </div>
           <button
-            className="border-[0.5px] outline-0 w-48 my-2 p-1 rounded bg-zinc-800 text-gray-200"
-            type="submit"
+            className="border-[0.5px] outline-0 w-48 mt-6 mb-3 p-1 rounded bg-zinc-800 text-gray-200 hover:bg-zinc-700 hover:text-white duration-300"
+            type="submit" 
           >
             Generate Email
           </button>
         </form>
       </div>
-      <div>{results}</div>
+      <div className="mt-12 mx-2">{results}</div>
     </div>
   );
 };
