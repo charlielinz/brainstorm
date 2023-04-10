@@ -12,22 +12,27 @@ const Home = () => {
     recipient: "",
     relationship: "",
     description: "",
+    style: "",
     nameError: "",
     recipientError: "",
     relationshipError: "",
     descriptionError: "",
+    styleError: "",
     formValid: false,
   });
+
   useEffect(() => {
-    const { name, recipient, relationship, description } = formData;
-    const formValid = name && recipient && relationship && description;
+    const { name, recipient, relationship, description, style } = formData;
+    const formValid = name && recipient && relationship && description && style;
     setFormData({ ...formData, formValid });
   }, [
     formData.name,
     formData.recipient,
     formData.relationship,
     formData.description,
+    formData.style,
   ]);
+
   const [results, setResults] = useState([]);
 
   const handleChange = (event) => {
@@ -45,6 +50,9 @@ const Home = () => {
         break;
       case "description":
         errorMessage = value ? "" : "please enter about the email content";
+        break;
+      case "style":
+        errorMessage = value ? "" : "please choose the email style";
         break;
       default:
         break;
@@ -73,6 +81,7 @@ const Home = () => {
           recipient: formData.recipient,
           relationship: formData.relationship,
           description: formData.description,
+          style: formData.style,
         }),
       });
       if (!response.ok) {
@@ -91,6 +100,7 @@ const Home = () => {
         recipient: "",
         relationship: "",
         description: "",
+        style: "",
       });
     }
   };
@@ -127,7 +137,7 @@ const Home = () => {
               className="bg-gray-200 px-3 py-1 outline-0 rounded-t border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="name"
-              placeholder="my name is"
+              placeholder="My name is"
               value={formData.name}
               autoComplete="off"
               onChange={handleChange}
@@ -141,7 +151,7 @@ const Home = () => {
               className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="recipient"
-              placeholder="this email is for"
+              placeholder="This email is for"
               value={formData.recipient}
               autoComplete="off"
               onChange={handleChange}
@@ -155,7 +165,7 @@ const Home = () => {
               className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
               type="text"
               name="relationship"
-              placeholder="he/she is my"
+              placeholder="He/She is my"
               value={formData.relationship}
               autoComplete="off"
               onChange={handleChange}
@@ -165,12 +175,29 @@ const Home = () => {
                 {formData.relationshipError}
               </span>
             )}
+            <select
+              className=" appearance-none bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
+              type="text"
+              name="style"
+              value={formData.style}
+              autoComplete="off"
+              onChange={handleChange}
+            >
+              <option value="">Choose a style</option>
+              <option value="formal">Formal</option>
+              <option value="casual">Casual</option>
+            </select>
+            {formData.styleError && (
+              <span className="text-red-400 text-sm pl-3 ">
+                {formData.styleError}
+              </span>
+            )}
             <textarea
               className="bg-gray-200 px-3 py-1 outline-0 h-24 rounded-b hover:bg-gray-300 duration-300"
               style={{ resize: "none" }}
               type="textarea"
               name="description"
-              placeholder="I want to say"
+              placeholder="Here's the thing"
               value={formData.description}
               autoComplete="off"
               onChange={handleChange}
