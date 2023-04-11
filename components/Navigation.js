@@ -22,21 +22,6 @@ const Navigation = () => {
         <Link href="/emailgpt" className={classNameByPath("/emailgpt")}>
           Email GPT
         </Link>
-        <Link href="/" className={classNameByPath("/a")}>
-          Apple GPT
-        </Link>
-        <Link href="/" className={classNameByPath("/b")}>
-          Banana GPT
-        </Link>
-        <Link href="/" className={classNameByPath("/c")}>
-          Car GPT
-        </Link>
-        <Link href="/" className={classNameByPath("/d")}>
-          Diamond GPT
-        </Link>
-        <Link href="/" className={classNameByPath("/ed")}>
-          Egg GPT
-        </Link>
       </ul>
     </nav>
   );
