@@ -22,9 +22,11 @@ export default function App({ Component, pageProps }) {
           content="It is all about life style."
         ></meta>
       </Head>
-      <main className="flex">
+      <main className="relative flex w-screen">
         <Navigation />
-        <Component {...pageProps} />
+        <div className="w-screen ml-64">
+          <Component {...pageProps} />
+        </div>
       </main>
     </>
   );

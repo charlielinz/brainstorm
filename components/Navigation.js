@@ -12,7 +12,7 @@ const Navigation = () => {
     }
   };
   return (
-    <nav className="flex flex-col px-2 py-4 h-screen w-64 bg-zinc-700 text-gray-100">
+    <nav className="fixed flex flex-col px-2 py-4 h-screen w-64 bg-zinc-700 text-gray-100">
       <div className="flex flex-col pt-2 pb-6 border-b-[1px] border-gray-400">
         <Link href="/" className={classNameByPath("/")}>
           Home

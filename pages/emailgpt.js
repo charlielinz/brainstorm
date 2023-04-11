@@ -3,6 +3,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAt } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { v4 as uuidv4 } from "uuid";
 
 library.add(faAt, faGithub);
 
@@ -226,17 +227,22 @@ const decode = async (data, setResults) => {
   const reader = data.getReader();
   const decoder = new TextDecoder();
   let done = false;
-  let count = 0;
   while (!done) {
     const { value, done: doneReading } = await reader.read();
     done = doneReading;
     const chunkValue = decoder.decode(value);
-    if (chunkValue === "\n") {
-      setResults((prev) => [...prev, <br key={count} />]);
+    if (chunkValue.includes("\n")) {
+      const words = chunkValue.split("\n");
+      for (let i = 0; i < words.length; i++) {
+        if (words[i] === "") {
+          setResults((prev) => [...prev, <br key={uuidv4()} />]);
+        } else {
+          setResults((prev) => [...prev, words[i]]);
+        }
+      }
     } else {
       setResults((prev) => [...prev, chunkValue]);
     }
-    count += 1;
   }
 };
 
