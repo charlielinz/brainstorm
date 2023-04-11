@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import Head from "next/head";
-import Footer from "@/components/Footer";
+import Navigation from "@/components/Navigation";
 
 export default function App({ Component, pageProps }) {
   return (
@@ -22,9 +22,9 @@ export default function App({ Component, pageProps }) {
           content="It is all about life style."
         ></meta>
       </Head>
-      <main>
+      <main className="flex">
+        <Navigation />
         <Component {...pageProps} />
-        <Footer />
       </main>
     </>
   );
