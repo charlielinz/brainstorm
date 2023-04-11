@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 
 library.add(faAt, faGithub);
 
-const emailgpt = () => {
+const Emailgpt = () => {
   const [formData, setFormData] = useState({
     name: "",
     recipient: "",
@@ -246,4 +246,4 @@ const decode = async (data, setResults) => {
   }
 };
 
-export default emailgpt;
+export default Emailgpt;
