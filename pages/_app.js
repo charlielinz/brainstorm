@@ -6,20 +6,20 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>BrainstormGPT</title>
-        <meta name="title" content="This is BrainstormGPT"></meta>
+        <title>GEmail</title>
+        <meta name="title" content="This is GEmail"></meta>
         <meta name="author" content="Charlie Lin"></meta>
         <meta
           name="description"
-          content="Come BrainStorm, Email reborn."
+          content="GEmail, generate genius email."
         ></meta>
         {/* <meta name="image" content=></meta> */}
-        <meta name="og:title" content="This is BrainstormGPT"></meta>
+        <meta name="og:title" content="This is GEmail"></meta>
         <meta name="og:author" content="Charlie Lin"></meta>
         {/* <meta name="og:image" content=></meta> */}
         <meta
           name="og:description"
-          content="It is all about life style."
+          content="GEmail, generate genius email."
         ></meta>
       </Head>
       <main className="relative flex w-screen">

@@ -6,15 +6,14 @@ export const config = {
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
-    const { name, recipient, relationship, description, style } =
-      await req.json();
+    const { name, position, recipient, description, date } = await req.json();
 
     const payload = {
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "user",
-          content: `My name is ${name}, I want to write a email to ${recipient}, and he is my ${relationship}. Here is the thing I want to tell him: ${description}. Can you give me a ${style} version? `,
+          content: `My name is ${name} and I work as a ${position} now. I am going to submit my resignation to my boss ${recipient} and here is the reason: ${description}. My last working day will be ${date}. Can you give me a Formal sample of this email? `,
         },
       ],
       stream: true,
