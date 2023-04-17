@@ -3,34 +3,38 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { v4 as uuidv4 } from "uuid";
 
-const Emailgpt = () => {
+const Resignation = () => {
   const today = new Date();
   const formattedDate = today.toISOString().slice(0, 10);
 
   const [formData, setFormData] = useState({
     name: "",
-    recipient: "",
+    company: "",
     position: "",
-    description: "",
+    recipient: "",
     date: formattedDate,
+    description: "",
     nameError: "",
-    recipientError: "",
+    companyError: "",
     positionError: "",
-    descriptionError: "",
+    recipientError: "",
     dateError: "",
+    descriptionError: "",
     formValid: false,
   });
 
   useEffect(() => {
-    const { name, recipient, position, description, date } = formData;
-    const formValid = name && recipient && position && description && date;
+    const { name, company, position, recipient, date, description } = formData;
+    const formValid =
+      name && company && position && recipient && date && description;
     setFormData({ ...formData, formValid });
   }, [
     formData.name,
-    formData.recipient,
+    formData.company,
     formData.position,
-    formData.description,
+    formData.recipient,
     formData.date,
+    formData.description,
   ]);
 
   const [results, setResults] = useState([]);
@@ -42,17 +46,20 @@ const Emailgpt = () => {
       case "name":
         errorMessage = value ? "" : "please enter your name";
         break;
-      case "recipient":
-        errorMessage = value ? "" : "please enter your boss's name";
+      case "company":
+        errorMessage = value ? "" : "please enter your company name";
         break;
       case "position":
         errorMessage = value ? "" : "please enter your position";
         break;
-      case "description":
-        errorMessage = value ? "" : "please enter the reason of resignation";
+      case "recipient":
+        errorMessage = value ? "" : "please enter your boss's name";
         break;
       case "date":
         errorMessage = value ? "" : "please enter the resignation date";
+        break;
+      case "description":
+        errorMessage = value ? "" : "please enter the reason of resignation";
         break;
       default:
         break;
@@ -78,10 +85,11 @@ const Emailgpt = () => {
         },
         body: JSON.stringify({
           name: formData.name,
-          recipient: formData.recipient,
+          company: formData.company,
           position: formData.position,
-          description: formData.description,
+          recipient: formData.recipient,
           date: formData.date,
+          description: formData.description,
         }),
       });
       if (!response.ok) {
@@ -97,10 +105,11 @@ const Emailgpt = () => {
       setFormData({
         ...formData,
         name: "",
-        recipient: "",
+        company: "",
         position: "",
-        description: "",
+        recipient: "",
         date: "",
+        description: "",
       });
     }
   };
@@ -125,6 +134,20 @@ const Emailgpt = () => {
             {formData.nameError && (
               <span className="text-red-400 text-sm pl-3 ">
                 {formData.nameError}
+              </span>
+            )}
+            <input
+              className="bg-gray-200 px-3 py-1 outline-0 rounded-t border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
+              type="text"
+              name="company"
+              placeholder="my company name is"
+              value={formData.company}
+              autoComplete="off"
+              onChange={handleChange}
+            />
+            {formData.companyError && (
+              <span className="text-red-400 text-sm pl-3 ">
+                {formData.companyError}
               </span>
             )}
             <input
@@ -220,4 +243,4 @@ const decode = async (data, setResults) => {
   }
 };
 
-export default Emailgpt;
+export default Resignation;

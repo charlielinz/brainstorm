@@ -20,7 +20,7 @@ export async function OpenAIStream(payload) {
   });
   const stream = new ReadableStream({
     async start(controller) {
-      function onParse(event) {
+      const onParse = (event) => {
         if (event.type === "event") {
           const data = event.data;
           if (data === "[DONE]") {
@@ -44,7 +44,7 @@ export async function OpenAIStream(payload) {
             controller.error(e);
           }
         }
-      }
+      };
 
       // stream response (SSE) from OpenAI may be fragmented into multiple chunks
       // this ensures we properly read chunks & invoke an event for each SSE event stream

@@ -6,14 +6,15 @@ export const config = {
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
-    const { name, position, recipient, description, date } = await req.json();
+    const { name, company, position, recipient, description, date } =
+      await req.json();
 
     const payload = {
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "user",
-          content: `My name is ${name} and I work as a ${position} now. I am going to submit my resignation to my boss ${recipient} and here is the reason: ${description}. My last working day will be ${date}. Can you give me a Formal sample of this email? `,
+          content: `My name is ${name} and I work as a ${position} at ${company} now. I am going to submit my resignation to my boss ${recipient} and here is the reason: ${description}. My last working day will be ${date}. Can you give me a Formal sample of this email? `,
         },
       ],
       stream: true,
@@ -23,7 +24,7 @@ const handler = async (req, res) => {
     const stream = await OpenAIStream(payload);
     return new Response(stream);
   } else {
-    return new Response();
+    return;
   }
 };
 
