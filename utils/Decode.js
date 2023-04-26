@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-export const decode = async (data, setResults, setIsGenerating) => {
+export const decode = async (data, setResults) => {
   const reader = data.getReader();
   const decoder = new TextDecoder();
   let done = false;
@@ -21,5 +21,5 @@ export const decode = async (data, setResults, setIsGenerating) => {
       setResults((prev) => [...prev, chunkValue]);
     }
   }
-  setIsGenerating(false)
+  // setIsGenerating(false)
 };

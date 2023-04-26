@@ -15,47 +15,6 @@ const Resignation = ({ formFieldDatas }) => {
   // const [isGenerating, setIsGenerating] = useState(false);
   const [results, setResults] = useState([]);
 
-  useEffect(() => {}, [formDatas]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setResults("");
-    // setIsGenerating(true);
-    if (!isFormValid) {
-      alert();
-    } else {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          company: formData.company,
-          position: formData.position,
-          recipient: formData.recipient,
-          date: formData.date,
-          description: formData.description,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const data = response.body;
-      if (!data) {
-        return;
-      }
-
-      decode(data, setResults, setIsGenerating);
-
-      const inputToUpdate = formDatas.find(
-        (item) => Object.keys(item)[0] === key
-      );
-      inputToUpdate[key].value = "";
-      setFormDatas(updatedFormDatas);
-    }
-  };
-
   const [selectedText, setSelectedText] = useState(null);
   const [toolbarPosition, setToolbarPosition] = useState(null);
 
@@ -81,10 +40,12 @@ const Resignation = ({ formFieldDatas }) => {
     <div className="flex flex-col max-w-2xl w-full mx-auto my-12">
       <div className="bg-gradient-to-br from-gray-300 to-gray-700 rounded transition-colors">
         <Emailform
+          resignationFormDatas={resignationFormDatas}
           formDatas={formDatas}
           setFormDatas={setFormDatas}
           isFormValid={isFormValid}
-          handleSubmit={handleSubmit}
+          setIsFormValid={setIsFormValid}
+          setResults={setResults}
         />
       </div>
       <div className="mt-12 mx-2" onMouseUp={handleMouseUp}>

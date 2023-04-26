@@ -1,53 +1,102 @@
+import { useEffect } from "react";
 import ErrorHandler from "@/utils/ErrorHandler";
+import { decode } from "@/utils/Decode";
 
-const Emailform = ({ formDatas, setFormDatas, isFormValid, handleSubmit }) => {
-  const handleChange = (key, value) => {
-    const error = ErrorHandler(key, value);
+const Emailform = ({
+  resignationFormDatas,
+  formDatas,
+  setFormDatas,
+  isFormValid,
+  setIsFormValid,
+  setResults,
+}) => {
+  useEffect(() => {
+    const errors = formDatas.filter((formData) => formData.error !== "");
+    if (errors.length !== 0) {
+      setIsFormValid(false);
+    } else {
+      setIsFormValid(true);
+    }
+  }, [formDatas]);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    const error = ErrorHandler(name, value);
     const updatedFormDatas = formDatas.map((formData) =>
-      formData.formField === key
+      formData.formField === name
         ? { ...formData, value: value, error: error }
         : { ...formData }
     );
     setFormDatas(updatedFormDatas);
   };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setResults("");
+    // setIsGenerating(true);
+    if (!isFormValid) {
+      alert();
+    } else {
+      const inputData = formDatas.reduce((acc, curr) => {
+        acc[curr.formField] = curr.value;
+        return acc;
+      }, {});
+      console.log(inputData);
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const data = response.body;
+      if (!data) {
+        return;
+      }
+
+      decode(data, setResults);
+
+      setFormDatas(resignationFormDatas);
+    }
+  };
+
   return (
     <form
       className="flex flex-col items-center bg-gray-100 m-2 pt-4 rounded-lg"
-      onSubmit={handleSubmit}
+      onSubmit={(event) => handleSubmit(event)}
     >
       <p className="text-2xl py-4">Email Info</p>
       <div className="w-full px-4">
-        {formDatas.map((formData, index) => {
-          return (
-            <div className="flex flex-col" key={index}>
-              {formData.type === "textarea" ? (
-                <textarea
-                  className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300 resize-none"
-                  placeholder={formData.placeholder}
-                  value={formData.value}
-                  onChange={(e) =>
-                    handleChange(formData.formField, e.target.value)
-                  }
-                />
-              ) : (
-                <input
-                  className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
-                  type={formData.type}
-                  placeholder={formData.placeholder}
-                  value={formData.value}
-                  onChange={(e) =>
-                    handleChange(formData.formField, e.target.value)
-                  }
-                />
-              )}
-              {formData.error && (
-                <span className="text-red-400 text-sm pl-3">
-                  {formData.error}
-                </span>
-              )}
-            </div>
-          );
-        })}
+        {formDatas.map((formData, index) => (
+          <div className="flex flex-col" key={index}>
+            {formData.type === "textarea" ? (
+              <textarea
+                className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300 resize-none"
+                name={formData.formField}
+                placeholder={formData.placeholder}
+                value={formData.value}
+                onChange={(event) => handleChange(event)}
+              />
+            ) : (
+              <input
+                className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
+                type={formData.type}
+                name={formData.formField}
+                placeholder={formData.placeholder}
+                value={formData.value}
+                onChange={(event) => handleChange(event)}
+              />
+            )}
+            {formData.error && (
+              <span className="text-red-400 text-sm pl-3">
+                {formData.error}
+              </span>
+            )}
+          </div>
+        ))}
       </div>
       <button
         className="flex justify-center items-center gap-2 border-[0.5px] outline-0 w-48 mt-6 mb-3 p-1 rounded bg-zinc-800 text-gray-200 hover:bg-zinc-700 hover:text-white duration-300"
