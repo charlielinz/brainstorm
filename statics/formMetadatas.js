@@ -3,42 +3,42 @@ const formattedDate = today.toISOString().slice(0, 10);
 
 export const resignationFormDatas = [
   {
-    formField: "name",
+    label: "name",
     type: "text",
     placeholder: "my name is",
     value: "",
     error: "",
   },
   {
-    formField: "company",
+    label: "company",
     type: "text",
     placeholder: "my company name is",
     value: "",
     error: "",
   },
   {
-    formField: "position",
+    label: "position",
     type: "text",
     placeholder: "my position is",
     value: "",
     error: "",
   },
   {
-    formField: "recipient",
+    label: "recipient",
     type: "text",
     placeholder: "my boss name is",
     value: "",
     error: "",
   },
   {
-    formField: "date",
+    label: "date",
     type: "date",
     placeholder: "",
     value: formattedDate,
     error: "",
   },
   {
-    formField: "description",
+    label: "description",
     type: "textarea",
     placeholder: "the reason of my resignation",
     value: "",

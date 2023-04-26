@@ -1,29 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ErrorHandler from "@/utils/ErrorHandler";
 import { decode } from "@/utils/Decode";
 
-const Emailform = ({
-  resignationFormDatas,
-  formDatas,
-  setFormDatas,
-  isFormValid,
-  setIsFormValid,
-  setResults,
-}) => {
-  useEffect(() => {
-    const errors = formDatas.filter((formData) => formData.error !== "");
-    if (errors.length !== 0) {
-      setIsFormValid(false);
-    } else {
+const Emailform = ({ formMetadatas, setResults }) => {
+  const [formDatas, setFormDatas] = useState(formMetadatas);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleFormValidation = (formDatas) => {
+    const emptyValues = formDatas.filter((formData) => formData.value === "");
+    if (emptyValues.length === 0) {
       setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
     }
+  };
+
+  useEffect(() => {
+    handleFormValidation(formDatas);
   }, [formDatas]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     const error = ErrorHandler(name, value);
     const updatedFormDatas = formDatas.map((formData) =>
-      formData.formField === name
+      formData.label === name
         ? { ...formData, value: value, error: error }
         : { ...formData }
     );
@@ -33,34 +34,31 @@ const Emailform = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
     setResults("");
-    // setIsGenerating(true);
-    if (!isFormValid) {
-      alert();
-    } else {
-      const inputData = formDatas.reduce((acc, curr) => {
-        acc[curr.formField] = curr.value;
-        return acc;
-      }, {});
-      console.log(inputData);
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(inputData),
-      });
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const data = response.body;
-      if (!data) {
-        return;
-      }
+    setIsGenerating(true);
 
-      decode(data, setResults);
-
-      setFormDatas(resignationFormDatas);
+    const inputData = formDatas.reduce((acc, curr) => {
+      acc[curr.label] = curr.value;
+      return acc;
+    }, {});
+    console.log(inputData);
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(inputData),
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
+    const data = response.body;
+    if (!data) {
+      return;
+    }
+
+    decode(data, setResults, setIsGenerating);
+
+    setFormDatas(formMetadatas);
   };
 
   return (
@@ -75,7 +73,7 @@ const Emailform = ({
             {formData.type === "textarea" ? (
               <textarea
                 className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300 resize-none"
-                name={formData.formField}
+                name={formData.label}
                 placeholder={formData.placeholder}
                 value={formData.value}
                 onChange={(event) => handleChange(event)}
@@ -84,7 +82,7 @@ const Emailform = ({
               <input
                 className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
                 type={formData.type}
-                name={formData.formField}
+                name={formData.label}
                 placeholder={formData.placeholder}
                 value={formData.value}
                 onChange={(event) => handleChange(event)}
@@ -103,7 +101,7 @@ const Emailform = ({
         type="submit"
         disabled={!isFormValid}
       >
-        {/* {isGenerating ? (
+        {isGenerating ? (
           <>
             <svg
               className="animate-spin h-5 w-5 text-white"
@@ -129,8 +127,7 @@ const Emailform = ({
           </>
         ) : (
           <span>Generate Email</span>
-        )} */}
-        Generate email
+        )}
       </button>
     </form>
   );

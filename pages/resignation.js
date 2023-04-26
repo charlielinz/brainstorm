@@ -4,15 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import Emailform from "@/components/Emailform";
 import Toolbar from "@/components/Toolbar";
-import { resignationFormDatas } from "@/statics/resignationFormDatas";
-import { decode } from "@/utils/Decode";
+import { resignationFormDatas } from "@/statics/formMetadatas";
 
 library.add(faMessage);
 
-const Resignation = ({ formFieldDatas }) => {
-  const [formDatas, setFormDatas] = useState(formFieldDatas);
-  const [isFormValid, setIsFormValid] = useState(false);
-  // const [isGenerating, setIsGenerating] = useState(false);
+const Resignation = ({ formMetadatas }) => {
   const [results, setResults] = useState([]);
 
   const [selectedText, setSelectedText] = useState(null);
@@ -40,11 +36,7 @@ const Resignation = ({ formFieldDatas }) => {
     <div className="flex flex-col max-w-2xl w-full mx-auto my-12">
       <div className="bg-gradient-to-br from-gray-300 to-gray-700 rounded transition-colors">
         <Emailform
-          resignationFormDatas={resignationFormDatas}
-          formDatas={formDatas}
-          setFormDatas={setFormDatas}
-          isFormValid={isFormValid}
-          setIsFormValid={setIsFormValid}
+          formMetadatas={formMetadatas}
           setResults={setResults}
         />
       </div>
@@ -57,9 +49,9 @@ const Resignation = ({ formFieldDatas }) => {
 };
 
 export const getStaticProps = async () => {
-  const formFieldDatas = resignationFormDatas;
+  const formMetadatas = resignationFormDatas;
   return {
-    props: { formFieldDatas },
+    props: { formMetadatas },
   };
 };
 
