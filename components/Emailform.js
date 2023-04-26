@@ -3,12 +3,11 @@ import ErrorHandler from "@/utils/ErrorHandler";
 const Emailform = ({ formDatas, setFormDatas, isFormValid, handleSubmit }) => {
   const handleChange = (key, value) => {
     const error = ErrorHandler(key, value);
-    const updatedFormDatas = [...formDatas];
-    const inputToUpdate = updatedFormDatas.find(
-      (item) => Object.keys(item)[0] === key
+    const updatedFormDatas = formDatas.map((formData) =>
+      formData.formField === key
+        ? { ...formData, value: value, error: error }
+        : { ...formData }
     );
-    inputToUpdate[key].value = value;
-    inputToUpdate[key].error = error;
     setFormDatas(updatedFormDatas);
   };
   return (
@@ -19,28 +18,32 @@ const Emailform = ({ formDatas, setFormDatas, isFormValid, handleSubmit }) => {
       <p className="text-2xl py-4">Email Info</p>
       <div className="w-full px-4">
         {formDatas.map((formData, index) => {
-          const key = Object.keys(formData)[0];
-          const { type, placeholder, value, error } = formData[key];
           return (
             <div className="flex flex-col" key={index}>
-              {type === "textarea" ? (
+              {formData.type === "textarea" ? (
                 <textarea
                   className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300 resize-none"
-                  placeholder={placeholder}
-                  value={value}
-                  onChange={(e) => handleChange(key, e.target.value)}
+                  placeholder={formData.placeholder}
+                  value={formData.value}
+                  onChange={(e) =>
+                    handleChange(formData.formField, e.target.value)
+                  }
                 />
               ) : (
                 <input
                   className="bg-gray-200 px-3 py-1 outline-0 border-b-[1px] border-gray-300 hover:bg-gray-300 duration-300"
-                  type={type}
-                  placeholder={placeholder}
-                  value={value}
-                  onChange={(e) => handleChange(key, e.target.value)}
+                  type={formData.type}
+                  placeholder={formData.placeholder}
+                  value={formData.value}
+                  onChange={(e) =>
+                    handleChange(formData.formField, e.target.value)
+                  }
                 />
               )}
-              {error && (
-                <span className="text-red-400 text-sm pl-3">{error}</span>
+              {formData.error && (
+                <span className="text-red-400 text-sm pl-3">
+                  {formData.error}
+                </span>
               )}
             </div>
           );

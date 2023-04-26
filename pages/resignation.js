@@ -9,14 +9,13 @@ import { decode } from "@/utils/Decode";
 
 library.add(faMessage);
 
-const Resignation = () => {
-  const [formDatas, setFormDatas] = useState(resignationFormDatas);
+const Resignation = ({ formFieldDatas }) => {
+  const [formDatas, setFormDatas] = useState(formFieldDatas);
   const [isFormValid, setIsFormValid] = useState(false);
   // const [isGenerating, setIsGenerating] = useState(false);
   const [results, setResults] = useState([]);
 
-  useEffect(() => {
-  }, [formDatas]);
+  useEffect(() => {}, [formDatas]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -94,6 +93,13 @@ const Resignation = () => {
       </div>
     </div>
   );
+};
+
+export const getStaticProps = async () => {
+  const formFieldDatas = resignationFormDatas;
+  return {
+    props: { formFieldDatas },
+  };
 };
 
 export default Resignation;
